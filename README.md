@@ -47,6 +47,12 @@ Linear rows of $\mathbf{J}$: derivative of the wrist position. Angular rows: the
 
 **Result:** each translation slider moves the tool in a straight line, each rotation slider turns it about its tip.
 
+
+
+https://github.com/user-attachments/assets/e72281ae-2816-4dc2-bc3b-630bcdf5ce85
+
+
+
 ## Exercise 3: Inverse geometric model
 
 **Goal:** find all joint values $\mathbf{q}$ such that ${}^f\mathbf{M}_e(\mathbf{q}) = \mathbf{M}_d$.
