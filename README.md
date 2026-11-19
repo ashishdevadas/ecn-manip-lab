@@ -94,6 +94,13 @@ Since $\mathbf{R}_d\mathbf{t} = \mathbf{p} - \mathbf{p}_d$, the error obeys $\do
 
 **Result:** nearly straight path, fast then slow; a higher gain $\lambda$ converges faster. Limit: near a singularity $\mathbf{J}^{+}$ gives very large joint velocities.
 
+
+
+
+https://github.com/user-attachments/assets/65223f9d-779a-4d6b-bd14-313c37a4ff67
+
+
+
 ---
 
 ## Comparison of Exercises 4, 5 and 6
