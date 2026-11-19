@@ -58,6 +58,14 @@ Linear rows of $\mathbf{J}$: derivative of the wrist position. Angular rows: the
 
 **Result:** in *Direct point-to-point*, the tool reaches every target pose.
 
+
+
+https://github.com/user-attachments/assets/3979cfaa-a9a5-4fa6-8f64-3cb23f10b0ee
+
+
+
+
+
 ## Exercise 4: Interpolated point-to-point
 
 **Goal:** move smoothly from $\mathbf{q}_0$ to $\mathbf{q}_f$ without exceeding the joint limits $\dot q_{max}$, $\ddot q_{max}$.
