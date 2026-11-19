@@ -35,6 +35,14 @@ Frames: **f** fixed base, **w** wrist, **e** end-effector. MDH notation: $(\alph
 
 **Result:** in *Manual joint control*, `checkPose` shows the model pose equal to the simulator pose for any joint values.
 
+
+
+https://github.com/user-attachments/assets/505f159f-b950-4e9c-87cb-41a685a61f60
+
+
+
+
+
 ## Exercise 2: Jacobian
 
 **Goal:** drive the tool with a velocity (twist) given in the end-effector frame.
