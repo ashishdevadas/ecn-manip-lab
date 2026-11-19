@@ -1,0 +1,7 @@
+build/
+install/
+log/
+*.user
+*.autosave
+__pycache__/
+.vscode/
