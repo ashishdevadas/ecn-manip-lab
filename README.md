@@ -82,6 +82,13 @@ where $\theta\mathbf{u}$ is the rotation $\mathbf{R}_0^T\mathbf{R}_d$.
 
 **Result:** an exact straight line in 1 s. Limits: every pose on the line must be reachable, and a 3-DOF robot (Turret) can follow the position but not the orientation.
 
+
+
+
+https://github.com/user-attachments/assets/0c1cd38d-4dbd-44af-9e10-18e5af8f6ffa
+
+
+
 ## Exercise 6: Straight line via Jacobian
 
 **Goal:** reach $\mathbf{M}_d$ by sending joint velocities proportional to the pose error.
