@@ -70,6 +70,13 @@ Minimum time over all joints: $\; t_f = \max_i \left( \dfrac{15\,|D_i|}{8\,\dot 
 
 **Result:** smooth motion, but the tool path is **curved** (only the joints are controlled).
 
+
+
+
+https://github.com/user-attachments/assets/b886c9c1-67c6-492b-a4df-719751e297a1
+
+
+
 ## Exercise 5: Straight line via inverse geometry
 
 **Goal:** move the tool along a straight line from $\mathbf{M}_0$ to $\mathbf{M}_d$ in $t_f = 1$ s.
