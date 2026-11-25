@@ -176,42 +176,57 @@ The axes intersect, so all aᵢ = 0; the prismatic joint puts its variable in r�
 
 **Goal:** compute the tool pose from q₁, q₂, q₃. **Method:** product of the three MDH transforms of the table above, plus the tool offset d. **Result:** in *Manual joint control*, the computed pose equals the simulator pose for any joint values.
 
-<!-- drag the Turret Ex. 1 video on the next line -->
+
+
+https://github.com/user-attachments/assets/c6ddd56d-9acc-4547-a346-485b48fb52df
+
+
 
 
 ### Turret, Exercise 2: Jacobian
 
 **Goal:** move the tool with the velocity sliders. **Method:** same law as the KR16, $`\dot{\mathbf{q}} = \mathbf{J}^{+}\,{}^f\mathbf{v}`$, but the Jacobian is 6×3: three joints cannot produce any twist, so the pseudo-inverse gives the closest possible motion. **Result:** the translation sliders move the tool in straight lines in every direction; the rotation sliders only work partly.
 
-<!-- drag the Turret Ex. 2 video on the next line -->
+
+https://github.com/user-attachments/assets/1ea8d069-67a3-44ba-b445-e11ca9f47dd8
+
+
 
 
 ### Turret, Exercise 3: Inverse geometric model
 
 **Goal:** find the joints that place the tool at the target. **Method:** only the position can be imposed. $`q_1`$ comes from $`-t_x \sin q_1 + t_y \cos q_1 = 0`$ (two solutions), then $`q_2, q_3`$ from $`-q_3 \sin q_2 = \rho`$ and $`q_3 \cos q_2 = t_z - b`$, with $`\rho = t_x \cos q_1 + t_y \sin q_1`$. Candidates outside the joint limits are rejected and the closest one is kept. **Result:** in *Direct point-to-point*, the tool jumps to every target position.
 
-<!-- drag the Turret Ex. 3 video on the next line -->
+
+https://github.com/user-attachments/assets/c03b4e9a-fbe2-491f-80c2-71cbeafc178a
+
 
 
 ### Turret, Exercise 4: Interpolated point-to-point
 
 **Goal:** move smoothly between targets in minimum time. **Method:** the same 5th-order time law as the KR16, applied to the three joints; the slowest joint sets the duration. **Result:** smooth motion without jerks; the tool path is curved.
 
-<!-- drag the Turret Ex. 4 video on the next line -->
+
+https://github.com/user-attachments/assets/ef665f8b-0019-41c6-b56d-4cf225cf8b47
+
 
 
 ### Turret, Exercise 5: Straight line via inverse geometry
 
 **Goal:** move the tool along a straight line in 1 s. **Method:** at every cycle, the intermediate pose on the line is solved by the inverse geometry. A 3-joint robot cannot reach the interpolated orientations, so the inverse geometry keeps only the position. **Result:** the tool **position** follows the straight line exactly; the orientation does not follow the interpolation.
 
-<!-- drag the Turret Ex. 5 video on the next line -->
+
+https://github.com/user-attachments/assets/ffdb7727-53a3-4f76-9599-68782755e1b9
+
 
 
 ### Turret, Exercise 6: Straight line via Jacobian
 
 **Goal:** reach the target with joint velocities proportional to the pose error. **Method:** the same law as the KR16, $`\mathbf{v} = -\lambda \mathbf{R}_d \mathbf{t}`$, $`\boldsymbol{\omega} = -\lambda \mathbf{R}\,\theta\mathbf{u}`$, through the 6×3 pseudo-inverse. **Result:** the position error decreases exponentially along a nearly straight line; the orientation is only approximately corrected.
 
-<!-- drag the Turret Ex. 6 video on the next line -->
+
+https://github.com/user-attachments/assets/793daf2b-f9ad-4cbc-9b58-a191d0474972
+
 
 
 ---
@@ -238,42 +253,57 @@ A 6R arm whose axes 2, 3 and 4 are parallel and whose wrist axes are offset from
 
 **Goal:** compute the tool pose from the six joints. **Method:** product of the six MDH transforms of the table above, then the tool transform (half-turn about z and 0.1922 m along z). **Result:** in *Manual joint control*, the computed pose equals the simulator pose; at q = 0 both give the tool at (1.184, 0.356, 0.012).
 
-<!-- drag the UR-10 Ex. 1 video on the next line -->
+
+
+https://github.com/user-attachments/assets/6b42a4ed-bb80-4918-b2ed-e9b4b65e540d
+
 
 
 ### UR-10, Exercise 2: Jacobian
 
 **Goal:** move the tool with the velocity sliders. **Method:** the same law as the KR16, $`\dot{\mathbf{q}} = \mathbf{J}^{+}\,{}^f\mathbf{v}`$, with the 6×6 Jacobian; the angular rows of joints 2, 3 and 4 are identical because their axes are parallel. **Result:** every slider works: straight-line translations and rotations about the tool tip.
 
-<!-- drag the UR-10 Ex. 2 video on the next line -->
+
+https://github.com/user-attachments/assets/79875ba7-3880-49f0-bb93-839b7d927a5b
+
+
+
+
+
 
 
 ### UR-10, Exercise 3: Inverse geometric model
 
 **Goal:** find the joints that reach the target pose. **Method:** the UR-10 has no spherical wrist, so position and orientation cannot be solved separately as on the KR16. Because axes 2, 3 and 4 are parallel, a closed-form solution still exists, with up to 8 solutions (Hawkins, 2013); it is provided by the lab and the closest solution is used. **Result:** in *Direct point-to-point*, the tool reaches every target pose.
 
-<!-- drag the UR-10 Ex. 3 video on the next line -->
+
+https://github.com/user-attachments/assets/beca0b23-a26d-447e-8139-af1aabf67cd6
+
 
 
 ### UR-10, Exercise 4: Interpolated point-to-point
 
 **Goal:** move smoothly between targets in minimum time. **Method:** the same 5th-order time law as the KR16 on the six joints. **Result:** smooth motion; the tool path is curved.
 
-<!-- drag the UR-10 Ex. 4 video on the next line -->
+https://github.com/user-attachments/assets/402589a2-67fb-43e5-b858-a3dc25acca7d
+
 
 
 ### UR-10, Exercise 5: Straight line via inverse geometry
 
 **Goal:** move the tool along a straight line in 1 s. **Method:** intermediate pose on the line (linear position, uniform rotation), solved by the inverse geometry at every cycle. **Result:** with six joints, the UR-10 follows both the straight line and the rotation exactly, like the KR16.
 
-<!-- drag the UR-10 Ex. 5 video on the next line -->
+https://github.com/user-attachments/assets/04283e16-3588-4b84-b6f2-164c3669b6fa
+
 
 
 ### UR-10, Exercise 6: Straight line via Jacobian
 
 **Goal:** reach the target with joint velocities proportional to the pose error. **Method:** the same law as the KR16, $`\mathbf{v} = -\lambda \mathbf{R}_d \mathbf{t}`$, $`\boldsymbol{\omega} = -\lambda \mathbf{R}\,\theta\mathbf{u}`$, with the 6×6 pseudo-inverse. **Result:** position and orientation errors decrease exponentially; the path is nearly straight.
 
-<!-- drag the UR-10 Ex. 6 video on the next line -->
+
+https://github.com/user-attachments/assets/7b6809fc-5a20-416f-ae1b-b29a93ee549c
+
 
 
 ---
