@@ -23,15 +23,15 @@ The exercises below are shown on the **KR16**. The **[Turret](#turret-rrp-3-dof)
 | Turret | RRP (3 DOF) | [`models/turret.yml`](models/turret.yml), [section](#turret-rrp-3-dof) |
 | UR-10 | 6R, no spherical wrist | [`models/ur10.yml`](models/ur10.yml), [section](#ur-10-6r-no-spherical-wrist) |
 
-Frames: **f** fixed base, **w** wrist, **e** end-effector. MDH notation: $(\alpha_i, a_i, \theta_i, r_i)$.
+Frames: **f** fixed base, **w** wrist, **e** end-effector. MDH notation: $`(\alpha_i, a_i, \theta_i, r_i)`$.
 
 ---
 
 ## Exercise 1: Direct geometric model
 
-**Goal:** compute the pose of the wrist ${}^f\mathbf{M}_w(\mathbf{q})$ and the constant tool offset ${}^w\mathbf{M}_e$.
+**Goal:** compute the pose of the wrist $`{}^f\mathbf{M}_w(\mathbf{q})`$ and the constant tool offset $`{}^w\mathbf{M}_e`$.
 
-**Method:** product of the MDH transforms $\;{}^f\mathbf{M}_w = \prod_i \mathbf{R}_x(\alpha_i)\,\mathbf{T}_x(a_i)\,\mathbf{R}_z(\theta_i)\,\mathbf{T}_z(r_i)$, generated with `dh_code.py` from the tables in [`models/`](models/).
+**Method:** product of the MDH transforms $`\;{}^f\mathbf{M}_w = \prod_i \mathbf{R}_x(\alpha_i)\,\mathbf{T}_x(a_i)\,\mathbf{R}_z(\theta_i)\,\mathbf{T}_z(r_i)`$, generated with `dh_code.py` from the tables in [`models/`](models/).
 
 **Result:** in *Manual joint control*, `checkPose` shows the model pose equal to the simulator pose for any joint values.
 
@@ -49,9 +49,11 @@ https://github.com/user-attachments/assets/505f159f-b950-4e9c-87cb-41a685a61f60
 
 **Method:** express the twist in the fixed frame, then use the pseudo-inverse of the Jacobian:
 
-$$\dot{\mathbf{q}} = \mathbf{J}^{+}(\mathbf{q}) \begin{bmatrix} {}^f\mathbf{R}_e & 0 \\ 0 & {}^f\mathbf{R}_e \end{bmatrix} {}^e\mathbf{v}$$
+```math
+\dot{\mathbf{q}} = \mathbf{J}^{+}(\mathbf{q}) \begin{bmatrix} {}^f\mathbf{R}_e & 0 \\ 0 & {}^f\mathbf{R}_e \end{bmatrix} {}^e\mathbf{v}
+```
 
-Linear rows of $\mathbf{J}$: derivative of the wrist position. Angular rows: the joint axes (rotation) or zero (prismatic joint).
+Linear rows of $`\mathbf{J}`$: derivative of the wrist position. Angular rows: the joint axes (rotation) or zero (prismatic joint).
 
 **Result:** each translation slider moves the tool in a straight line, each rotation slider turns it about its tip.
 
@@ -63,11 +65,11 @@ https://github.com/user-attachments/assets/e72281ae-2816-4dc2-bc3b-630bcdf5ce85
 
 ## Exercise 3: Inverse geometric model
 
-**Goal:** find all joint values $\mathbf{q}$ such that ${}^f\mathbf{M}_e(\mathbf{q}) = \mathbf{M}_d$.
+**Goal:** find all joint values $`\mathbf{q}`$ such that $`{}^f\mathbf{M}_e(\mathbf{q}) = \mathbf{M}_d`$.
 
 **Method:**
-- **Turret:** $q_1$ from $-t_x \sin q_1 + t_y \cos q_1 = 0$, then $(q_2, q_3)$ from $-q_3 \sin q_2 = \rho$ and $q_3 \cos q_2 = t_z - b$.
-- **KR16 (spherical wrist):** the wrist position gives $q_1, q_2, q_3$; the orientation ${}^3\mathbf{R}_6 = {}^0\mathbf{R}_3^T\,\mathbf{R}_d$ gives $q_4, q_5, q_6$, with the wrist singularity ($\sin q_5 = 0$) handled separately.
+- **Turret:** $`q_1`$ from $`-t_x \sin q_1 + t_y \cos q_1 = 0`$, then $`(q_2, q_3)`$ from $`-q_3 \sin q_2 = \rho`$ and $`q_3 \cos q_2 = t_z - b`$.
+- **KR16 (spherical wrist):** the wrist position gives $`q_1, q_2, q_3`$; the orientation $`{}^3\mathbf{R}_6 = {}^0\mathbf{R}_3^T\,\mathbf{R}_d`$ gives $`q_4, q_5, q_6`$, with the wrist singularity ($`\sin q_5 = 0`$) handled separately.
 - All candidates are checked against the pose and the joint limits; the one closest to the current configuration is used.
 
 **Result:** in *Direct point-to-point*, the tool reaches every target pose.
@@ -82,13 +84,15 @@ https://github.com/user-attachments/assets/3979cfaa-a9a5-4fa6-8f64-3cb23f10b0ee
 
 ## Exercise 4: Interpolated point-to-point
 
-**Goal:** move smoothly from $\mathbf{q}_0$ to $\mathbf{q}_f$ without exceeding the joint limits $\dot q_{max}$, $\ddot q_{max}$.
+**Goal:** move smoothly from $`\mathbf{q}_0`$ to $`\mathbf{q}_f`$ without exceeding the joint limits $`\dot q_{max}`$, $`\ddot q_{max}`$.
 
 **Method:** 5th-order polynomial with zero velocity and acceleration at both ends:
 
-$$\mathbf{q}(t) = \mathbf{q}_0 + p(x)(\mathbf{q}_f - \mathbf{q}_0), \qquad p(x) = 10x^3 - 15x^4 + 6x^5, \qquad x = \frac{t - t_0}{t_f}$$
+```math
+\mathbf{q}(t) = \mathbf{q}_0 + p(x)(\mathbf{q}_f - \mathbf{q}_0), \qquad p(x) = 10x^3 - 15x^4 + 6x^5, \qquad x = \frac{t - t_0}{t_f}
+```
 
-Minimum time over all joints: $\; t_f = \max_i \left( \dfrac{15\,|D_i|}{8\,\dot q_{max,i}},\ \sqrt{\dfrac{10\,|D_i|}{\sqrt{3}\,\ddot q_{max,i}}} \right)$, with $D_i = q_{f,i} - q_{0,i}$.
+Minimum time over all joints: $`\; t_f = \max_i \left( \dfrac{15\,|D_i|}{8\,\dot q_{max,i}},\ \sqrt{\dfrac{10\,|D_i|}{\sqrt{3}\,\ddot q_{max,i}}} \right)`$, with $`D_i = q_{f,i} - q_{0,i}`$.
 
 **Result:** smooth motion, but the tool path is **curved** (only the joints are controlled).
 
@@ -101,13 +105,15 @@ https://github.com/user-attachments/assets/b886c9c1-67c6-492b-a4df-719751e297a1
 
 ## Exercise 5: Straight line via inverse geometry
 
-**Goal:** move the tool along a straight line from $\mathbf{M}_0$ to $\mathbf{M}_d$ in $t_f = 1$ s.
+**Goal:** move the tool along a straight line from $`\mathbf{M}_0`$ to $`\mathbf{M}_d`$ in $`t_f = 1`$ s.
 
-**Method:** progress $\alpha = \dfrac{t - t_0}{t_f} \in [0, 1]$, then an intermediate pose on the line, solved by the inverse geometry at every cycle (100 Hz):
+**Method:** progress $`\alpha = \dfrac{t - t_0}{t_f} \in [0, 1]`$, then an intermediate pose on the line, solved by the inverse geometry at every cycle (100 Hz):
 
-$$\mathbf{p}(\alpha) = (1-\alpha)\,\mathbf{p}_0 + \alpha\,\mathbf{p}_d, \qquad \mathbf{R}(\alpha) = \mathbf{R}_0\,\mathrm{Rot}(\mathbf{u}, \alpha\theta), \qquad \mathbf{q} = \mathrm{IGM}\big(\mathbf{M}_i(\alpha)\big)$$
+```math
+\mathbf{p}(\alpha) = (1-\alpha)\,\mathbf{p}_0 + \alpha\,\mathbf{p}_d, \qquad \mathbf{R}(\alpha) = \mathbf{R}_0\,\mathrm{Rot}(\mathbf{u}, \alpha\theta), \qquad \mathbf{q} = \mathrm{IGM}\big(\mathbf{M}_i(\alpha)\big)
+```
 
-where $\theta\mathbf{u}$ is the rotation $\mathbf{R}_0^T\mathbf{R}_d$.
+where $`\theta\mathbf{u}`$ is the rotation $`\mathbf{R}_0^T\mathbf{R}_d`$.
 
 **Result:** an exact straight line in 1 s. Limits: every pose on the line must be reachable, and a 3-DOF robot (Turret) can follow the position but not the orientation.
 
@@ -120,15 +126,17 @@ https://github.com/user-attachments/assets/0c1cd38d-4dbd-44af-9e10-18e5af8f6ffa
 
 ## Exercise 6: Straight line via Jacobian
 
-**Goal:** reach $\mathbf{M}_d$ by sending joint velocities proportional to the pose error.
+**Goal:** reach $`\mathbf{M}_d`$ by sending joint velocities proportional to the pose error.
 
-**Method:** pose error ${}^{e^*}\mathbf{M}_e = \mathbf{M}_d^{-1}\mathbf{M} \rightarrow (\mathbf{t}, \theta\mathbf{u})$, then
+**Method:** pose error $`{}^{e^*}\mathbf{M}_e = \mathbf{M}_d^{-1}\mathbf{M} \rightarrow (\mathbf{t}, \theta\mathbf{u})`$, then
 
-$$\mathbf{v} = -\lambda\,\mathbf{R}_d\,\mathbf{t}, \qquad \boldsymbol{\omega} = -\lambda\,\mathbf{R}\,\theta\mathbf{u}, \qquad \dot{\mathbf{q}} = \mathbf{J}^{+} \begin{bmatrix} \mathbf{v} \\ \boldsymbol{\omega} \end{bmatrix}$$
+```math
+\mathbf{v} = -\lambda\,\mathbf{R}_d\,\mathbf{t}, \qquad \boldsymbol{\omega} = -\lambda\,\mathbf{R}\,\theta\mathbf{u}, \qquad \dot{\mathbf{q}} = \mathbf{J}^{+} \begin{bmatrix} \mathbf{v} \\ \boldsymbol{\omega} \end{bmatrix}
+```
 
-Since $\mathbf{R}_d\mathbf{t} = \mathbf{p} - \mathbf{p}_d$, the error obeys $\dot{\mathbf{e}} = -\lambda\mathbf{e}$, so $\mathbf{p}(t) - \mathbf{p}_d = (\mathbf{p}_0 - \mathbf{p}_d)\,e^{-\lambda t}$: a straight line with exponential convergence (5 % of the error left after $3/\lambda$ s).
+Since $`\mathbf{R}_d\mathbf{t} = \mathbf{p} - \mathbf{p}_d`$, the error obeys $`\dot{\mathbf{e}} = -\lambda\mathbf{e}`$, so $`\mathbf{p}(t) - \mathbf{p}_d = (\mathbf{p}_0 - \mathbf{p}_d)\,e^{-\lambda t}`$: a straight line with exponential convergence (5 % of the error left after $`3/\lambda`$ s).
 
-**Result:** nearly straight path, fast then slow; a higher gain $\lambda$ converges faster. Limit: near a singularity $\mathbf{J}^{+}$ gives very large joint velocities.
+**Result:** nearly straight path, fast then slow; a higher gain $`\lambda`$ converges faster. Limit: near a singularity $`\mathbf{J}^{+}`$ gives very large joint velocities.
 
 
 
@@ -145,7 +153,7 @@ https://github.com/user-attachments/assets/65223f9d-779a-4d6b-bd14-313c37a4ff67
 |---|---|---|---|
 | Command | Joint positions | Joint positions | Joint velocities |
 | Tool path | Curved | Straight | Nearly straight |
-| Duration | Minimum time ($\dot q_{max}$, $\ddot q_{max}$) | Fixed, 1 s | Exponential ($\lambda$) |
+| Duration | Minimum time ($`\dot q_{max}`$, $`\ddot q_{max}`$) | Fixed, 1 s | Exponential ($`\lambda`$) |
 | Needs | IGM once | IGM every cycle | Jacobian only |
 | Weak point | No control of the path | Unreachable poses on the line | Singularities |
 
@@ -162,7 +170,7 @@ An **RRP** robot: a vertical revolute joint (q₁), a horizontal revolute joint 
 | 3 | −π/2 | 0 | 0 | q₃ |
 | e (tool) | 0 | 0 | 0 | d = 0.1 |
 
-The axes intersect, so all aᵢ = 0; the prismatic joint puts its variable in r₃. Wrist position: $(-q_3 \sin q_2 \cos q_1,\ -q_3 \sin q_2 \sin q_1,\ b + q_3 \cos q_2)$.
+The axes intersect, so all aᵢ = 0; the prismatic joint puts its variable in r₃. Wrist position: $`(-q_3 \sin q_2 \cos q_1,\ -q_3 \sin q_2 \sin q_1,\ b + q_3 \cos q_2)`$.
 
 **What changes for each exercise**
 
